@@ -23,47 +23,59 @@ jobs:
   ubuntu:
     # For available GitHub-hosted runners, see:
     # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
-    name: ubuntu (${{ matrix.compiler }} ${{ matrix.cuda }} CUDA ${{ matrix.openmp }} OpenMP, ${{ matrix.link }})
+    name: ${{ matrix.os }} (${{ matrix.compiler }} ${{ matrix.cuda }} CUDA ${{ matrix.openmp }} OpenMP, ${{ matrix.link }})
 
     strategy:
       # Allow other runners in the matrix to continue if some fail
       fail-fast: false
 
       matrix:
+        os: [ubuntu-latest]
         compiler: [gcc]
         cuda: [with]
         openmp: [with]
         link: [both]
         include:
-          - compiler: gcc
+          - os: ubuntu-latest
+            compiler: gcc
             cuda: with
             openmp: with
             link: both
-          - compiler: gcc
+          - os: ubuntu-latest
+            compiler: gcc
             cuda: without
             openmp: with
             link: both
-          - compiler: clang
+          - os: ubuntu-latest
+            compiler: clang
             cuda: with
             openmp: with
             link: both
-          - compiler: clang
+          - os: ubuntu-latest
+            compiler: clang
             cuda: without
             openmp: with
             link: both
-          - compiler: gcc
+          - os: ubuntu-latest
+            compiler: gcc
             cuda: without
             openmp: without
             link: both
-          - compiler: gcc
+          - os: ubuntu-latest
+            compiler: gcc
             cuda: with
             openmp: with
             link: static
             # "Fake" a cross-compilation to exercise that build system path
             extra-cmake-flags:
               -DCMAKE_SYSTEM_NAME="Linux"
+          - os: ubuntu-24.04-arm
+            compiler: gcc
+            cuda: without
+            openmp: with
+            link: both
 
     env:
       CC: ${{ matrix.compiler == 'gcc' && 'gcc' || 'clang' }}
@@ -92,7 +104,7 @@ jobs:
         # used in action/cache/restore and action/cache/save steps
         id: ccache-prepare
         run: |
-          echo "key=ccache:ubuntu:${{ matrix.compiler }}:${{ matrix.cuda }}:${{ matrix.openmp }}:${{ matrix.link }}:${{ github.ref }}:$(date +"%Y-%m-%d_%H-%M-%S"):${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "key=ccache:${{ matrix.os }}:${{ matrix.compiler }}:${{ matrix.cuda }}:${{ matrix.openmp }}:${{ matrix.link }}:${{ github.ref }}:$(date +"%Y-%m-%d_%H-%M-%S"):${{ github.sha }}" >> $GITHUB_OUTPUT
 
       - name: restore ccache
         # setup the GitHub cache used to maintain the ccache from one job to the next
@@ -102,8 +114,8 @@ jobs:
           key: ${{ steps.ccache-prepare.outputs.key }}
           # Prefer caches from the same branch. Fall back to caches from the dev branch.
           restore-keys: |
-            ccache:ubuntu:${{ matrix.compiler }}:${{ matrix.cuda }}:${{ matrix.openmp }}:${{ matrix.link }}:${{ github.ref }}
-            ccache:ubuntu:${{ matrix.compiler }}:${{ matrix.cuda }}:${{ matrix.openmp }}:${{ matrix.link }}:
+            ccache:${{ matrix.os }}:${{ matrix.compiler }}:${{ matrix.cuda }}:${{ matrix.openmp }}:${{ matrix.link }}:${{ github.ref }}
+            ccache:${{ matrix.os }}:${{ matrix.compiler }}:${{ matrix.cuda }}:${{ matrix.openmp }}:${{ matrix.link }}:
 
       - name: create empty libraries
         # This is to work around a bug in nvlink.
@@ -116,9 +128,9 @@ jobs:
           ar rcsv librt.a empty.o
           ar rcsv libpthread.a empty.o
           # overwrite system libraries with "valid" empty libraries
-          sudo mv ./libdl.a /usr/lib/x86_64-linux-gnu/libdl.a
-          sudo mv ./librt.a /usr/lib/x86_64-linux-gnu/librt.a
-          sudo mv ./libpthread.a /usr/lib/x86_64-linux-gnu/libpthread.a
+          sudo mv ./libdl.a /usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH)/libdl.a
+          sudo mv ./librt.a /usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH)/librt.a
+          sudo mv ./libpthread.a /usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH)/libpthread.a
 
       - name: configure ccache
         env:
