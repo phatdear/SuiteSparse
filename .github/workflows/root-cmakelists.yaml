@@ -48,10 +48,6 @@ jobs:
             cuda: with
             link: both
           - os: ubuntu-latest
-            compiler: clang
-            cuda: without
-            link: both
-          - os: ubuntu-latest
             compiler: gcc
             cuda: with
             link: static

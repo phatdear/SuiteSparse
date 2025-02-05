@@ -49,19 +49,14 @@ jobs:
             openmp: with
             link: both
           - os: ubuntu-latest
-            compiler: clang
-            cuda: with
-            openmp: with
-            link: both
-          - os: ubuntu-latest
-            compiler: clang
-            cuda: without
-            openmp: with
-            link: both
-          - os: ubuntu-latest
             compiler: gcc
             cuda: without
             openmp: without
+            link: both
+          - os: ubuntu-latest
+            compiler: clang
+            cuda: with
+            openmp: with
             link: both
           - os: ubuntu-latest
             compiler: gcc
