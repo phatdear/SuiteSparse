@@ -35,31 +35,30 @@ jobs:
       fail-fast: false
 
       matrix:
-        openmp: [with, without]
-        cuda: [without]
+        openmp: [with]
+        cuda: [with]
         link: [both]
         cc: [cl]
         cxx: [cl]
         include:
-          - openmp: without
-            openmp-cmake-flags: "-DSUITESPARSE_USE_OPENMP=OFF"
           - openmp: with
             cuda: with
-            cuda-cmake-flags:
-              -DSUITESPARSE_USE_CUDA=ON
-              -DCMAKE_CUDA_COMPILER_LAUNCHER="ccache"
+            link: both
+            cc: cl
+            cxx: cl
+          - openmp: with
+            cuda: without
+            link: both
+            cc: cl
+            cxx: cl
+          - openmp: without
+            cuda: without
             link: both
             cc: cl
             cxx: cl
           - openmp: with
             cuda: with
-            cuda-cmake-flags:
-              -DSUITESPARSE_USE_CUDA=ON
-              -DCMAKE_CUDA_COMPILER_LAUNCHER="ccache"
             link: static
-            link-cmake-flags:
-              -DBUILD_SHARED_LIBS=OFF
-              -DBUILD_STATIC_LIBS=ON
             cc: cl
             cxx: cl
           - openmp: with
@@ -222,9 +221,14 @@ jobs:
                 -DPython_EXECUTABLE="C:/msys64/ucrt64/bin/python.exe" \
                 -DSUITESPARSE_DEMOS=OFF \
                 -DBUILD_TESTING=OFF \
-                ${{ matrix.openmp-cmake-flags }} \
-                ${{ matrix.cuda-cmake-flags }} \
-                ${{ matrix.link-cmake-flags }} \
+                -DSUITESPARSE_USE_OPENMP=${{ matrix.openmp == 'without' && 'OFF' || 'ON' }} \
+                ${{ matrix.cuda == 'with'
+                  && '-DSUITESPARSE_USE_CUDA=ON \
+                      -DCMAKE_CUDA_COMPILER_LAUNCHER="ccache"'
+                  || '' }} \
+                ${{ matrix.link == 'static'
+                    && '-DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON'
+                    || '' }} \
                 "${_extra_config[@]}" \
                 ..
 
@@ -278,7 +282,7 @@ jobs:
             -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} \
             -DCMAKE_PREFIX_PATH="${GITHUB_WORKSPACE}/lib/cmake;C:/Miniconda/envs/test/Library;${GITHUB_WORKSPACE}/dependencies" \
             -DBLA_VENDOR="All" \
-            ${{ matrix.openmp-cmake-flags }} \
+            -DSUITESPARSE_USE_OPENMP=${{ matrix.openmp == 'without' && 'OFF' || 'ON' }} \
             ..
           echo "::endgroup::"
           printf "::group::\033[0;32m==>\033[0m Building example\n"
