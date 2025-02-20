@@ -1,7 +1,9 @@
-Dec 20, 2024: version 7.9.0
+Feb 20, 2025: version 7.9.0
 
-    * GraphBLAS v9.4.3: Added the GxB_IndexBinaryOp.  Added new JIT kernels.
+    * GraphBLAS v9.4.5: Added the GxB_IndexBinaryOp.  Added new JIT kernels.
         Disabled more FactoryKernels to reduce compiled library size.
+        Added workaround for AppleClang compiler bug.
+    * LAGraph v1.1.5: minor updates to github CI; typos.
     * Package versions in this release: (* denotes a new version)
         SuiteSparse_config 7.9.0    *
         AMD 3.3.3
@@ -13,14 +15,14 @@ Dec 20, 2024: version 7.9.0
         CSparse 4.3.2
         CXSparse 4.4.1
         Example 1.8.4               *
-        GraphBLAS 9.4.3             *
+        GraphBLAS 9.4.5             *
         KLU 2.3.5
         LDL 3.3.2
-        LAGraph 1.1.4
+        LAGraph 1.1.5               *
         SuiteSparse_Mongoose 3.3.4
         ParU 1.0.0
         RBio 4.3.4
-        SPEX 3.2.1
+        SPEX 3.2.3                  *
         SPQR 4.3.4
         UMFPACK 6.3.5
 
