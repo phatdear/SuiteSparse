@@ -107,10 +107,6 @@ find_package ( SPEX 3.2.3 REQUIRED )    # requires GMP and MPFR
 find_package ( SPQR 4.3.4 REQUIRED )
 find_package ( UMFPACK 6.3.5 REQUIRED )
 
-# for GMP and MPFR
-find_package ( MPFR 4.0.2 REQUIRED )    # from SPEX/cmake_modules
-find_package ( GMP 6.1.2 REQUIRED )     # from SPEX/cmake_modules
-
 #-------------------------------------------------------------------------------
 # configure files
 #-------------------------------------------------------------------------------
@@ -510,8 +506,8 @@ endif ( )
 # other libraries
 #-------------------------------------------------------------------------------
 
-# The "MY" library does not directly rely on the OpenMP, libm, BLAS, and
-# LAPACK, libraries.  However, if you wish to create a library that uses those
+# The "MY" library does not directly rely on the OpenMP, libm, BLAS, LAPACK,
+# MPFR, and GMP libraries.  However, if you wish to create a library that uses those
 # libraries, uncomment the corresponding section.  These direct dependencies
 # are left out of the MY CMakeLists.txt, as a test for the other SuiteSparse
 # cmake build system, to ensure that the libraries should be linked via the
@@ -572,8 +568,6 @@ if ( 0 )
     endif ( )
     include_directories ( ${LAPACK_INCLUDE_DIRS} )
 
-endif ( )
-
     # MPFR:
     message ( STATUS "MPFR library:        ${MPFR_LIBRARIES}" )
     if ( BUILD_SHARED_LIBS )
@@ -597,6 +591,8 @@ endif ( )
         target_link_libraries ( my_cxx_static PUBLIC ${GMP_STATIC} )
     endif ( )
     include_directories ( ${GMP_INCLUDE_DIR} )
+
+endif ( )
 
 #-------------------------------------------------------------------------------
 # installation location
