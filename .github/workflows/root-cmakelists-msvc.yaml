@@ -43,11 +43,11 @@ jobs:
         cc: [cl]
         cxx: [cl]
         include:
-          - openmp: with
+#         - openmp: with
 #           cuda: with
-            link: both
-            cc: cl
-            cxx: cl
+#           link: both
+#           cc: cl
+#           cxx: cl
           - openmp: with
 #           cuda: without
             link: both
@@ -58,11 +58,11 @@ jobs:
             link: both
             cc: cl
             cxx: cl
-          - openmp: with
+#         - openmp: with
 #           cuda: with
-            link: static
-            cc: cl
-            cxx: cl
+#           link: static
+#           cc: cl
+#           cxx: cl
           - openmp: with
 #           cuda: without
             link: both
