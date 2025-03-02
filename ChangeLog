@@ -1,4 +1,4 @@
-Mar 1, 2025: version 7.10.0
+Mar 3, 2025: version 7.10.0
 
     * GraphBLAS v10.0.0: major upgrade, now supporting 32-bit/64-bit integer
         indices.  Note the SO version change from 9 to 10.  GraphBLAS v10 is
