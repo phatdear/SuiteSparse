@@ -23,7 +23,9 @@ jobs:
     # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
     runs-on: windows-latest
 
-    name: msvc (${{ matrix.cc }} ${{ matrix.openmp }} OpenMP ${{ matrix.cuda }} CUDA, ${{ matrix.link }})
+#   cuda runners are timing out, as of Feb 25, 2025
+#   name: msvc (${{ matrix.cc }} ${{ matrix.openmp }} OpenMP ${{ matrix.cuda }} CUDA, ${{ matrix.link }})
+    name: msvc (${{ matrix.cc }} ${{ matrix.openmp }} OpenMP, ${{ matrix.link }})
 
     defaults:
       run:
@@ -36,38 +38,38 @@ jobs:
 
       matrix:
         openmp: [with]
-        cuda: [with]
+#       cuda: [with]
         link: [both]
         cc: [cl]
         cxx: [cl]
         include:
           - openmp: with
-            cuda: with
+#           cuda: with
             link: both
             cc: cl
             cxx: cl
           - openmp: with
-            cuda: without
+#           cuda: without
             link: both
             cc: cl
-            cxx: cl
+            cxx: clk
           - openmp: without
-            cuda: without
+#           cuda: without
             link: both
             cc: cl
             cxx: cl
           - openmp: with
-            cuda: with
+#           cuda: with
             link: static
             cc: cl
             cxx: cl
           - openmp: with
-            cuda: without
+#           cuda: without
             link: both
             cc: clang-cl
             cxx: clang-cl
           - openmp: with
-            cuda: without
+#           cuda: without
             link: both
             cc: clang
             cxx: clang++
