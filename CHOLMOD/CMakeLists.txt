@@ -423,9 +423,15 @@ if ( BUILD_STATIC_LIBS )
     endif ( )
 
     if ( CHOLMOD_HAS_CUDA )
+        # Dependencies that are linking to this static library would need to
+        # use the CUDA compiler as the linker driver. Ideally, CMake would do
+        # that automatically. Until that is fixed in CMake, set the
+        # CUDA_RESOLVE_DEVICE_SYMBOLS property ON.
         set_target_properties ( CHOLMOD_static PROPERTIES
             POSITION_INDEPENDENT_CODE ON
             CUDA_SEPARABLE_COMPILATION ON
+            CUDA_RESOLVE_DEVICE_SYMBOLS ON
+            CUDA_RUNTIME_LIBRARY Static
             LINKER_LANGUAGE CUDA )
     else ( )
         set_target_properties ( CHOLMOD_static PROPERTIES
