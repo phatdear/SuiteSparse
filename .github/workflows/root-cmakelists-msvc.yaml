@@ -47,6 +47,11 @@ jobs:
             cc: cl
             cxx: cl
           - openmp: with
+            cuda: with
+            link: static
+            cc: cl
+            cxx: cl
+          - openmp: with
             cuda: without
             link: both
             cc: cl
