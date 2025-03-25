@@ -383,12 +383,16 @@ if ( BUILD_SHARED_LIBS )
         OUTPUT_NAME cholmod
         SOVERSION ${CHOLMOD_VERSION_MAJOR}
         PUBLIC_HEADER "Include/cholmod.h"
-        WINDOWS_EXPORT_ALL_SYMBOLS ON
-        LINKER_LANGUAGE C )
+        WINDOWS_EXPORT_ALL_SYMBOLS ON )
 
     if ( CHOLMOD_HAS_CUDA )
-        set_target_properties ( CHOLMOD PROPERTIES CUDA_SEPARABLE_COMPILATION ON )
-        set_target_properties ( CHOLMOD PROPERTIES POSITION_INDEPENDENT_CODE ON )
+        set_target_properties ( CHOLMOD PROPERTIES
+            POSITION_INDEPENDENT_CODE ON
+            CUDA_SEPARABLE_COMPILATION ON
+            LINKER_LANGUAGE CUDA )
+    else ( )
+        set_target_properties ( CHOLMOD PROPERTIES
+            LINKER_LANGUAGE C )
     endif ( )
 
     if ( ${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.25" )
@@ -411,8 +415,7 @@ if ( BUILD_STATIC_LIBS )
         C_STANDARD 11
         C_STANDARD_REQUIRED ON
         OUTPUT_NAME cholmod
-        PUBLIC_HEADER "Include/cholmod.h"
-        LINKER_LANGUAGE C )
+        PUBLIC_HEADER "Include/cholmod.h" )
 
     if ( MSVC OR ("${CMAKE_C_SIMULATE_ID}" STREQUAL "MSVC") )
         set_target_properties ( CHOLMOD_static PROPERTIES
@@ -420,8 +423,13 @@ if ( BUILD_STATIC_LIBS )
     endif ( )
 
     if ( CHOLMOD_HAS_CUDA )
-        set_target_properties ( CHOLMOD_static PROPERTIES CUDA_SEPARABLE_COMPILATION on )
-        set_target_properties ( CHOLMOD_static PROPERTIES POSITION_INDEPENDENT_CODE on )
+        set_target_properties ( CHOLMOD_static PROPERTIES
+            POSITION_INDEPENDENT_CODE ON
+            CUDA_SEPARABLE_COMPILATION ON
+            LINKER_LANGUAGE CUDA )
+    else ( )
+        set_target_properties ( CHOLMOD_static PROPERTIES
+            LINKER_LANGUAGE C )
     endif ( )
 
     if ( ${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.25" )
