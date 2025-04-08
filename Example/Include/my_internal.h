@@ -39,8 +39,8 @@
 #endif
 
 #include "cholmod.h"
-#if !defined (CHOLMOD__VERSION) || CHOLMOD__VERSION < SUITESPARSE__VERCODE(5,3,1)
-#error "This library requires CHOLMOD 5.3.1 or later"
+#if !defined (CHOLMOD__VERSION) || CHOLMOD__VERSION < SUITESPARSE__VERCODE(5,3,2)
+#error "This library requires CHOLMOD 5.3.2 or later"
 #endif
 
 #include "colamd.h"
