@@ -15,10 +15,10 @@
 cmake_minimum_required ( VERSION 3.22 )
 
 # version of both SuiteSparse and SuiteSparse_config
-set ( SUITESPARSE_DATE "Mar 6, 2025" )
+set ( SUITESPARSE_DATE "Apr 10, 2025" )
 set ( SUITESPARSE_VERSION_MAJOR 7 )
 set ( SUITESPARSE_VERSION_MINOR 10 )
-set ( SUITESPARSE_VERSION_SUB   1 )
+set ( SUITESPARSE_VERSION_SUB   2 )
 set ( SUITESPARSE_CONFIG_VERSION_MAJOR ${SUITESPARSE_VERSION_MAJOR} CACHE STRING "" FORCE )
 set ( SUITESPARSE_CONFIG_VERSION_MINOR ${SUITESPARSE_VERSION_MINOR} CACHE STRING "" FORCE )
 set ( SUITESPARSE_CONFIG_VERSION_PATCH ${SUITESPARSE_VERSION_SUB} CACHE STRING "" FORCE )
@@ -127,7 +127,19 @@ endif ( )
 # find the BLAS
 #-------------------------------------------------------------------------------
 
-include ( SuiteSparseBLAS )
+option ( SUITESPARSE_REQUIRE_BLAS "Must not be set to OFF if any SuiteSparse project requires BLAS functions" ON )
+
+if ( SUITESPARSE_REQUIRE_BLAS )
+    include ( SuiteSparseBLAS )
+else ( )
+    # It doesn't actually matter which Fortran integer size is selected here.
+    # But we might as well respect any user flags.
+    if ( SUITESPARSE_USE_64BIT_BLAS )
+        include ( SuiteSparseBLAS64 )
+    else ( )
+        include ( SuiteSparseBLAS32 )
+    endif ( )
+endif ( )
 
 #-------------------------------------------------------------------------------
 # configure files

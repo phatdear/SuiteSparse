@@ -64,6 +64,7 @@ endforeach ( )
 
 # CHOLMOD options affecting dependencies
 option ( CHOLMOD_CAMD "ON (default): use CAMD/CCOLAMD.  OFF: do not use CAMD/CCOLAMD" ON )
+option ( CHOLMOD_SUPERNODAL "ON (default): use Supernodal Module.  OFF: do not use Supernodal Module" ON )
 
 # KLU options affecting dependencies
 option ( KLU_USE_CHOLMOD "ON (default): use CHOLMOD in KLU.  OFF: do not use CHOLMOD in KLU" ON )
@@ -111,7 +112,7 @@ include ( SuiteSparsePolicy )
 
 if ( SUITESPARSE_USE_SYSTEM_GRAPHBLAS )
     list ( REMOVE_ITEM SUITESPARSE_ENABLE_PROJECTS "graphblas" )
-    find_package ( GraphBLAS 9.3.1 REQUIRED )
+    find_package ( GraphBLAS 10.0.3 REQUIRED )
 else ( )
     if ( "lagraph" IN_LIST SUITESPARSE_ENABLE_PROJECTS )
         # LAGraph requires GraphBLAS.
@@ -137,7 +138,7 @@ endif ( )
 
 if ( SUITESPARSE_USE_SYSTEM_UMFPACK )
     list ( REMOVE_ITEM SUITESPARSE_ENABLE_PROJECTS "umfpack" )
-    find_package ( UMFPACK 6.3.4 REQUIRED )
+    find_package ( UMFPACK 6.3.5 REQUIRED )
 else ( )
     if ( "paru" IN_LIST SUITESPARSE_ENABLE_PROJECTS )
         # ParU requires UMFPACK.
@@ -150,7 +151,7 @@ endif ( )
 
 if ( SUITESPARSE_USE_SYSTEM_CHOLMOD )
     list ( REMOVE_ITEM SUITESPARSE_ENABLE_PROJECTS "cholmod" )
-    find_package ( CHOLMOD 5.3.0 REQUIRED )
+    find_package ( CHOLMOD 5.3.2 REQUIRED )
 else ( )
     if ( ( KLU_USE_CHOLMOD AND "klu" IN_LIST SUITESPARSE_ENABLE_PROJECTS )
             OR ( UMFPACK_USE_CHOLMOD AND "umfpack" IN_LIST SUITESPARSE_ENABLE_PROJECTS )
@@ -224,7 +225,7 @@ endif ( )
 
 if ( SUITESPARSE_USE_SYSTEM_SUITESPARSE_CONFIG )
     list ( REMOVE_ITEM SUITESPARSE_ENABLE_PROJECTS "suitesparse_config" )
-    find_package ( SuiteSparse_config 7.8.2 REQUIRED )
+    find_package ( SuiteSparse_config 7.10.2 REQUIRED )
 else ( )
     if ( "mongoose" IN_LIST SUITESPARSE_ENABLE_PROJECTS
             OR "amd" IN_LIST SUITESPARSE_ENABLE_PROJECTS
@@ -265,6 +266,19 @@ if ( CMAKE_VERSION VERSION_LESS 3.24 )
     endif ( )
 endif ( )
 
+
+# BLAS is only required for some sub-projects
+option ( SUITESPARSE_REQUIRE_BLAS "Must not be set to OFF if any SuiteSparse project requires BLAS functions" ON )
+
+if ( ("cholmod" IN_LIST SUITESPARSE_ENABLE_PROJECTS AND CHOLMOD_SUPERNODAL)
+        OR "paru" IN_LIST SUITESPARSE_ENABLE_PROJECTS
+        OR "spqr" IN_LIST SUITESPARSE_ENABLE_PROJECTS
+        OR "umfpack" IN_LIST SUITESPARSE_ENABLE_PROJECTS )
+    if ( NOT SUITESPARSE_REQUIRE_BLAS )
+        message ( FATAL_ERROR "SUITESPARSE_REQUIRE_BLAS must not be set to OFF when building CHOLMOD with SUPERNODAL, ParU, SPQR, or UMFPACK." )
+    endif ( )
+
+endif ( )
 
 #-------------------------------------------------------------------------------
 # include selected projects
