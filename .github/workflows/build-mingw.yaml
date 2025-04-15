@@ -23,7 +23,7 @@ jobs:
   mingw:
     # For available GitHub-hosted runners, see:
     # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
 
     defaults:
       run:
@@ -35,16 +35,23 @@ jobs:
       fail-fast: false
 
       matrix:
-        msystem: [MINGW64, MINGW32, UCRT64, CLANG64]
+        msystem: [MINGW64, MINGW32, UCRT64, CLANG64, CLANGARM64]
         include:
           - msystem: MINGW64
+            os: windows-latest
             f77-package: fc
           - msystem: MINGW32
+            os: windows-latest
             f77-package: fc
           - msystem: UCRT64
+            os: windows-latest
             # Purposefully don't install a Fortran compiler to test that configuration
             f77-package: cc
           - msystem: CLANG64
+            os: windows-latest
+            f77-package: fc
+          - msystem: CLANGARM64
+            os: windows-11-arm
             f77-package: fc
 
     env:
@@ -64,8 +71,10 @@ jobs:
 
           update: true
 
-          # Use pre-installed version to save disc space on partition with source.
-          release: false
+          # Use pre-installed version if possible to save disc space on
+          # partition with source.  MSYS2 is not pre-installed on the
+          # windows-11-arm runners currently.
+          release: ${{ matrix.msystem == 'CLANGARM64' }}
 
           install: >-
             base-devel
