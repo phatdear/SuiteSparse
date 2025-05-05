@@ -67,9 +67,9 @@ P [0] = 0
 P [1] = 1
 
 ------------------------------------------------------------
-CHOLMOD: v5.3.2 (Apr 10, 2025)
-CHOLMOD: v5.3.2 (in library)
-CHOLMOD version code: 5003002
+CHOLMOD: v5.3.3 (May 5, 2025)
+CHOLMOD: v5.3.3 (in library)
+CHOLMOD version code: 5003003
 
 ------------------------------------------------------------
 GraphBLAS: v10.0.5 (May 5, 2025)
